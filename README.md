@@ -4,6 +4,10 @@ Client to search for Nexus Interviews.
 
 ## Locations
 
+Note: data is from upstream repo and accuracy of the locationID is not guaranteed.
+If the API response does not match what the TTP scheduler shows, the locationID may be wrong.
+See: https://github.com/arosu/NexusInterview/pull/3.
+
 | ID    | Enrollment Center Name                                                                                                                |
 | ----- | ------------------------------------------------------------------------------------------------------------------------------------- |
 | 8040  | Albuquerque Enrollment Center - Albuquerque International Sunport 2200 Sunport Blvd SE Albuquerque NM 87106                           |

@@ -1,6 +1,6 @@
-# Toronto Nexus Twitter Bot
+# Nexus Interview Search
 
-Currently live at https://twitter.com/TorontoNexus
+Client to search for Nexus Interviews.
 
 ## Locations
 

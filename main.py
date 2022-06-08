@@ -4,15 +4,12 @@ import os
 import sys
 from datetime import datetime, timedelta
 
-import google.cloud.logging
 import requests
 import twitter
 
 WEEK_DELTA = 12  # Weeks
 LOCATIONS = [
-    ("Toronto Enrollment Center", 5027),
-    ("Buffalo-Ft. Erie Enrollment Center", 5022),
-    ("Niagara Falls Enrollment Center", 5161),
+    ("Blaine", 5020),
 ]
 
 LOGGING_FORMAT = "%(asctime)s %(name)-12s %(levelname)-8s %(message)s"
@@ -41,7 +38,7 @@ def tweet(message: str) -> None:
             raise
 
 
-def check_for_openings(location_name: str, location_code: int, test_mode: bool = True) -> None:
+def check_for_openings(location_name: str, location_code: int, args: argparse) -> None:
 
     start = datetime.now()
     end = start + timedelta(weeks=WEEK_DELTA)
@@ -68,11 +65,13 @@ def check_for_openings(location_name: str, location_code: int, test_mode: bool =
                 location=location_name,
                 date=timestamp.strftime(MESSAGE_TIME_FORMAT)
             )
-            if test_mode:
+            if args.test:
                 print(message)
-            else:
+            if args.tweet:
                 logging.info(f"Tweeting: {message}")
                 tweet(message)
+            else:
+                os.system("""osascript -e 'display notification "{}" with title "NEXUS interview slot found"'""".format(message))
             return  # Halt on first match
 
     logging.info(f"No openings for {location_name}")
@@ -82,19 +81,12 @@ def main() -> None:
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--test", action="store_true", default=False)
+    parser.add_argument("--tweet", action="store_true", default=False)
     args = parser.parse_args()
 
     logging.info(f"Starting checks (locations: {len(LOCATIONS)})")
     for location_name, location_code in LOCATIONS:
-        check_for_openings(location_name, location_code, args.test)
-
-
-def google_cloud_entry(data, context):
-
-    client = google.cloud.logging.Client()
-    client.setup_logging()
-
-    main()
+        check_for_openings(location_name, location_code, args)
 
 
 if __name__ == "__main__":

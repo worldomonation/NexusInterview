@@ -1,3 +1,2 @@
-google-cloud-logging
 python-twitter
 requests[security]
